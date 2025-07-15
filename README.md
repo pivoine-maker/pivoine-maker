@@ -42,22 +42,7 @@
 
 ## 🚀 快速开始
 
-### 方法1：直接运行
-1. 下载项目文件
-2. 双击 `index.html` 文件即可开始游戏
-
-### 方法2：本地服务器（推荐）
-```bash
-# 使用Python启动服务器
-python3 -m http.server 8080
-
-# 或使用Node.js
-npx serve .
-
-# 或使用其他任何本地服务器
-```
-
-然后在浏览器中访问 `http://localhost:8080`
+https://pivoine-maker.github.io/pivoine-maker/
 
 ## 📁 项目结构
 
