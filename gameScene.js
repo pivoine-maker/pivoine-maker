@@ -125,8 +125,8 @@ function initializeGame() {
 function setupMobileOptimizations() {
     if (GameUtils.isMobile()) {
         // 调整卡牌大小适应移动端
-        GAME_CONFIG.cardWidth = Math.min(GAME_CONFIG.cardWidth, 50);
-        GAME_CONFIG.cardHeight = Math.min(GAME_CONFIG.cardHeight, 50);
+        GAME_CONFIG.cardWidth = Math.min(GAME_CONFIG.cardWidth, 80);
+        GAME_CONFIG.cardHeight = Math.min(GAME_CONFIG.cardHeight, 80);
         
         // 调整动画速度（移动端使用更快的动画）
         GAME_CONFIG.cardMoveSpeed = Math.max(200, GAME_CONFIG.cardMoveSpeed - 100);
