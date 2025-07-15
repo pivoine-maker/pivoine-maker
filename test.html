@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>羊了个羊 - 测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: #f0f0f0;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+    </style>
+</head>
+<body>
+    <h1>羊了个羊 - JavaScript 加载测试</h1>
+    <div id="test-results"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/card.js"></script>
+    <script src="js/slotSystem.js"></script>
+    <script src="js/gameScene.js"></script>
+    
+    <script>
+        function addTestResult(name, success, message) {
+            const resultsDiv = document.getElementById('test-results');
+            const div = document.createElement('div');
+            div.className = `test-result ${success ? 'success' : 'error'}`;
+            div.innerHTML = `<strong>${name}:</strong> ${message}`;
+            resultsDiv.appendChild(div);
+        }
+        
+        window.addEventListener('load', function() {
+            // 测试 Phaser.js
+            addTestResult('Phaser.js', typeof Phaser !== 'undefined', 
+                typeof Phaser !== 'undefined' ? '✓ 已加载' : '✗ 未加载');
+            
+            // 测试 GAME_CONFIG
+            addTestResult('GAME_CONFIG', typeof GAME_CONFIG !== 'undefined', 
+                typeof GAME_CONFIG !== 'undefined' ? '✓ 已加载' : '✗ 未加载');
+            
+            // 测试 GameUtils
+            addTestResult('GameUtils', typeof GameUtils !== 'undefined', 
+                typeof GameUtils !== 'undefined' ? '✓ 已加载' : '✗ 未加载');
+            
+            // 测试 phaserConfig
+            addTestResult('phaserConfig', typeof phaserConfig !== 'undefined', 
+                typeof phaserConfig !== 'undefined' ? '✓ 已加载' : '✗ 未加载');
+            
+            // 测试 Card 类
+            addTestResult('Card Class', typeof Card !== 'undefined', 
+                typeof Card !== 'undefined' ? '✓ 已加载' : '✗ 未加载');
+            
+            // 测试 SlotSystem 类
+            addTestResult('SlotSystem Class', typeof SlotSystem !== 'undefined', 
+                typeof SlotSystem !== 'undefined' ? '✓ 已加载' : '✗ 未加载');
+            
+            // 测试场景函数
+            addTestResult('preload function', typeof preload === 'function', 
+                typeof preload === 'function' ? '✓ 已加载' : '✗ 未加载');
+            
+            addTestResult('create function', typeof create === 'function', 
+                typeof create === 'function' ? '✓ 已加载' : '✗ 未加载');
+            
+            addTestResult('update function', typeof update === 'function', 
+                typeof update === 'function' ? '✓ 已加载' : '✗ 未加载');
+            
+            // 如果所有测试都通过，尝试创建游戏实例
+            if (typeof Phaser !== 'undefined' && typeof phaserConfig !== 'undefined') {
+                try {
+                    const testGame = new Phaser.Game(phaserConfig);
+                    addTestResult('游戏实例创建', true, '✓ 成功创建 Phaser 游戏实例');
+                    testGame.destroy(true);
+                } catch (error) {
+                    addTestResult('游戏实例创建', false, `✗ 创建失败: ${error.message}`);
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

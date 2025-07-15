@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>羊了个羊 - 经典三消小游戏</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐑</text></svg>">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="game-container">
+        <div id="game-header">
+            <h1>羊了个羊</h1>
+            <div id="score">分数: 0</div>
+            <div id="level">第 1 关</div>
+        </div>
+        
+        <div id="game-canvas">
+            <div id="loading-screen" style="
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 600px;
+                flex-direction: column;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 15px;
+                color: white;
+            ">
+                <div class="loading-spinner" style="
+                    width: 60px;
+                    height: 60px;
+                    border: 6px solid rgba(255,255,255,0.3);
+                    border-radius: 50%;
+                    border-top-color: #fff;
+                    animation: spin 1s ease-in-out infinite;
+                    margin-bottom: 20px;
+                "></div>
+                <h3>游戏加载中...</h3>
+                <p>正在初始化羊了个羊</p>
+            </div>
+        </div>
+        
+        <div id="game-ui">
+            <div id="props-panel">
+                <button id="shuffle-btn" class="prop-btn">
+                    <span>🔄</span>
+                    <span>洗牌</span>
+                    <span class="count">3</span>
+                </button>
+                <button id="remove-btn" class="prop-btn">
+                    <span>💣</span>
+                    <span>移除</span>
+                    <span class="count">3</span>
+                </button>
+                <button id="undo-btn" class="prop-btn">
+                    <span>↩️</span>
+                    <span>撤销</span>
+                    <span class="count">3</span>
+                </button>
+            </div>
+        </div>
+        
+        <div id="game-over" style="display: none;">
+            <div id="game-over-content">
+                <h2 id="game-result">游戏结束</h2>
+                <p id="final-score">最终分数: 0</p>
+                <button id="restart-btn">重新开始</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 引入Phaser.js框架 -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.90.0/dist/phaser.min.js"></script>
+    
+    <!-- 游戏逻辑文件 - 按依赖顺序加载 -->
+    <script src="config.js"></script>
+    <script src="card.js"></script>
+    <script src="slotSystem.js"></script>
+    <script src="gameScene.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>
