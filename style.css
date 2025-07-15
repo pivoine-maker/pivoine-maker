@@ -392,3 +392,10 @@ body {
         font-size: 0.8em;
     }
 } 
+
+@media screen and (orientation: landscape) and (max-height: 500px) {
+    body {
+        align-items: flex-start;
+        overflow-y: auto;
+    }
+}
