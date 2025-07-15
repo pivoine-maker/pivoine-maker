@@ -171,7 +171,7 @@ function createGameUI() {
     
     // 创建游戏提示文字
     this.hintText = this.add.text(GAME_CONFIG.width / 2, 35, '点击卡牌，三个相同即可消除', {
-        fontSize: '16px',
+        fontSize: '24px',
         fill: '#ffffff',
         align: 'center'
     });
