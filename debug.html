@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>羊了个羊 - 调试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(255,255,255,0.1);
+        }
+        .success { background: rgba(76, 175, 80, 0.3) !important; }
+        .error { background: rgba(244, 67, 54, 0.3) !important; }
+        .loading { background: rgba(255, 193, 7, 0.3) !important; }
+        pre {
+            background: rgba(0,0,0,0.3);
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>羊了个羊 - JavaScript依赖调试</h1>
+    
+    <div id="tests">
+        <div class="test-item loading">
+            <h3>正在检查JavaScript依赖...</h3>
+        </div>
+    </div>
+    
+    <div id="error-details" style="display:none;">
+        <h3>详细错误信息：</h3>
+        <pre id="error-log"></pre>
+    </div>
+    
+    <!-- 按依赖顺序加载所有脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/phaser@3.70.0/dist/phaser.min.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/card.js"></script>
+    <script src="js/slotSystem.js"></script>
+    <script src="js/gameScene.js"></script>
+    <script src="js/game.js"></script>
+    
+    <script>
+        window.addEventListener('load', function() {
+            const tests = document.getElementById('tests');
+            const errorDetails = document.getElementById('error-details');
+            const errorLog = document.getElementById('error-log');
+            let allPassed = true;
+            let errorMessages = [];
+            
+            function addTest(name, condition, errorMsg = '') {
+                const div = document.createElement('div');
+                div.className = 'test-item';
+                
+                if (condition) {
+                    div.className += ' success';
+                    div.innerHTML = `<h4>✅ ${name}</h4><p>检查通过</p>`;
+                } else {
+                    div.className += ' error';
+                    div.innerHTML = `<h4>❌ ${name}</h4><p>检查失败: ${errorMsg}</p>`;
+                    allPassed = false;
+                    errorMessages.push(`${name}: ${errorMsg}`);
+                }
+                
+                tests.appendChild(div);
+            }
+            
+            // 清空loading状态
+            tests.innerHTML = '';
+            
+            try {
+                // 检查Phaser
+                addTest('Phaser.js框架', typeof Phaser !== 'undefined', 'Phaser未加载');
+                
+                // 检查基础配置
+                addTest('游戏配置(GAME_CONFIG)', typeof GAME_CONFIG !== 'undefined', 'GAME_CONFIG未定义');
+                addTest('游戏状态(GAME_STATE)', typeof GAME_STATE !== 'undefined', 'GAME_STATE未定义');
+                addTest('卡牌状态(CARD_STATE)', typeof CARD_STATE !== 'undefined', 'CARD_STATE未定义');
+                addTest('道具类型(PROP_TYPE)', typeof PROP_TYPE !== 'undefined', 'PROP_TYPE未定义');
+                addTest('游戏工具(GameUtils)', typeof GameUtils !== 'undefined', 'GameUtils未定义');
+                
+                // 检查类定义
+                addTest('卡牌类(Card)', typeof Card !== 'undefined', 'Card类未定义');
+                addTest('卡牌管理器(CardManager)', typeof CardManager !== 'undefined', 'CardManager类未定义');
+                addTest('卡槽系统(SlotSystem)', typeof SlotSystem !== 'undefined', 'SlotSystem类未定义');
+                
+                // 检查场景函数
+                addTest('预加载函数(preload)', typeof preload === 'function', 'preload函数未定义');
+                addTest('创建函数(create)', typeof create === 'function', 'create函数未定义');
+                addTest('更新函数(update)', typeof update === 'function', 'update函数未定义');
+                addTest('Phaser配置初始化(initPhaserConfig)', typeof initPhaserConfig === 'function', 'initPhaserConfig函数未定义');
+                
+                // 检查游戏初始化函数
+                addTest('游戏初始化(initGame)', typeof initGame === 'function', 'initGame函数未定义');
+                
+                // 尝试初始化Phaser配置
+                if (typeof initPhaserConfig === 'function') {
+                    try {
+                        initPhaserConfig();
+                        addTest('Phaser配置创建', typeof phaserConfig !== 'undefined', 'phaserConfig创建失败');
+                    } catch (e) {
+                        addTest('Phaser配置创建', false, e.message);
+                    }
+                } else {
+                    addTest('Phaser配置创建', false, 'initPhaserConfig函数不存在');
+                }
+                
+                // 最终结果
+                const finalDiv = document.createElement('div');
+                finalDiv.className = 'test-item';
+                if (allPassed) {
+                    finalDiv.className += ' success';
+                    finalDiv.innerHTML = '<h2>🎉 所有检查通过！</h2><p>游戏应该可以正常运行了。</p><p><a href="/" style="color: #4CAF50;">返回游戏</a></p>';
+                } else {
+                    finalDiv.className += ' error';
+                    finalDiv.innerHTML = '<h2>⚠️ 发现问题</h2><p>请查看下方的错误详情。</p>';
+                    errorDetails.style.display = 'block';
+                    errorLog.textContent = errorMessages.join('\n');
+                }
+                tests.appendChild(finalDiv);
+                
+            } catch (e) {
+                const errorDiv = document.createElement('div');
+                errorDiv.className = 'test-item error';
+                errorDiv.innerHTML = `<h4>💥 严重错误</h4><p>${e.message}</p>`;
+                tests.appendChild(errorDiv);
+                
+                errorDetails.style.display = 'block';
+                errorLog.textContent = e.stack || e.message;
+            }
+        });
+    </script>
+</body>
+</html> 
