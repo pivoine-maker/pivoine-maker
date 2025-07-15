@@ -5,8 +5,8 @@ const GAME_CONFIG = {
     height: 600,
     
     // 卡牌设置
-    cardWidth: 60,
-    cardHeight: 60,
+    cardWidth: 80,
+    cardHeight: 80,
     cardTypes: ['🐑', '🐺', '🐸', '🐧', '🐰', '🐼', '🐯', '🐮', '🐷', '🐵'],
     
     // 布局设置
