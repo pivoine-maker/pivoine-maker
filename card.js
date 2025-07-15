@@ -321,18 +321,40 @@ class CardManager {
     }
     
     getCardPosition(layer, index) {
-        // 计算卡牌在不同层级的位置
+        // 计算卡牌在不同层级的位置 (更整齐的平铺层叠)
         const centerX = GAME_CONFIG.width / 2;
-        const centerY = GAME_CONFIG.height / 2 - 50;
-        const layerOffset = layer * 5; // 每层偏移量
+        const centerY = GAME_CONFIG.height / 2 - 20; // 整体布局上移
+
+        const cardWidth = GAME_CONFIG.cardWidth;
+        const cardHeight = GAME_CONFIG.cardHeight;
+
+        // 定义一个6列的网格，让布局更宽敞
+        const cols = 6;
+        const numRows = Math.ceil(GAME_CONFIG.cardsPerLayer / cols);
+
+        const col = index % cols;
+        const row = Math.floor(index / cols);
+
+        // 使用更大的间距乘数来分散卡牌
+        const spacingMultiplier = 1.2;
+        const gridWidth = cols * cardWidth * spacingMultiplier;
+        const gridHeight = numRows * cardHeight * spacingMultiplier;
+
+        // 将卡牌放置在网格中
+        let x = centerX - gridWidth / 2 + col * cardWidth * spacingMultiplier + cardWidth / 2;
+        let y = centerY - gridHeight / 2 + row * cardHeight * spacingMultiplier + cardHeight / 2;
+
+        // 添加基于层级的偏移，制造轻微的、有序的层叠感
+        const layerOffsetX = (layer - GAME_CONFIG.layers / 2) * 5;
+        const layerOffsetY = (layer - GAME_CONFIG.layers / 2) * 5;
         
-        // 使用圆形排列
-        const radius = 150 + layer * 20;
-        const angle = (index / GAME_CONFIG.cardsPerLayer) * Math.PI * 2;
-        
-        const x = centerX + Math.cos(angle) * radius + layerOffset;
-        const y = centerY + Math.sin(angle) * radius * 0.6 + layerOffset;
-        
+        // 添加一个基于卡牌索引的、确定性的微小偏移，避免完全对齐，增加自然感
+        const deterministicJitterX = ((index * 5) % 15) - 7.5;
+        const deterministicJitterY = ((index * 3) % 11) - 5.5;
+
+        x += layerOffsetX + deterministicJitterX;
+        y += layerOffsetY + deterministicJitterY;
+
         return { x, y };
     }
     
@@ -362,8 +384,10 @@ class CardManager {
     
     cardsOverlap(card1, card2) {
         // 检查两张卡牌是否重叠
+        // For a stacked layout, we need a more precise check for clickability.
+        // A card is considered "overlapped" if the center of another card is on top of it.
         const distance = GameUtils.getDistance(card1.x, card1.y, card2.x, card2.y);
-        return distance < GAME_CONFIG.cardWidth * 0.8;
+        return distance < GAME_CONFIG.cardWidth * 0.6; // Reduced from 0.8 to allow more clicks
     }
     
     rebuildSpatialInfo() {
