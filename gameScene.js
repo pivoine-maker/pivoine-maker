@@ -228,7 +228,11 @@ function setupPropButtons() {
     const restartBtn = document.getElementById('restart-btn');
     if (restartBtn) {
         restartBtn.addEventListener('click', () => {
-            restartGame.call(this);
+            if (restartBtn.textContent === '恭喜晋级') {
+                restartForNextLevel.call(this);
+            } else {
+                restartGame.call(this);
+            }
         });
     }
 }
@@ -310,11 +314,8 @@ function handleGameOver(reason) {
     showGameOverScreen(message, isWin);
     
     if (isWin) {
-        // 胜利，进入下一关
-        this.time.delayedCall(2000, () => { // 等待2秒进入下一关
-            level++;
-            restartForNextLevel.call(this);
-        });
+        // 胜利，为下一关做准备
+        level++;
     }
     
     console.log(`游戏结束: ${reason} - ${message}`);
@@ -531,11 +532,19 @@ function showGameOverScreen(message, isWin) {
     const gameOverDiv = document.getElementById('game-over');
     const gameResult = document.getElementById('game-result');
     const finalScore = document.getElementById('final-score');
+    const restartBtn = document.getElementById('restart-btn');
     
-    if (gameOverDiv && gameResult && finalScore) {
+    if (gameOverDiv && gameResult && finalScore && restartBtn) {
         gameResult.textContent = message;
         gameResult.style.color = isWin ? '#4CAF50' : '#F44336';
         finalScore.textContent = `最终分数: ${GameUtils.formatScore(score)}`;
+        
+        if (isWin) {
+            restartBtn.textContent = '恭喜晋级';
+        } else {
+            restartBtn.textContent = '重新开始';
+        }
+
         gameOverDiv.style.display = 'flex';
     }
 }
