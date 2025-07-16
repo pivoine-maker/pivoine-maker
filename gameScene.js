@@ -228,7 +228,7 @@ function setupPropButtons() {
     const restartBtn = document.getElementById('restart-btn');
     if (restartBtn) {
         restartBtn.addEventListener('click', () => {
-            if (restartBtn.textContent === '恭喜晋级') {
+            if (restartBtn.textContent === '进入下一关') {
                 restartForNextLevel.call(this);
             } else {
                 restartGame.call(this);
@@ -540,7 +540,7 @@ function showGameOverScreen(message, isWin) {
         finalScore.textContent = `最终分数: ${GameUtils.formatScore(score)}`;
         
         if (isWin) {
-            restartBtn.textContent = '恭喜晋级';
+            restartBtn.textContent = '进入下一关';
         } else {
             restartBtn.textContent = '重新开始';
         }
